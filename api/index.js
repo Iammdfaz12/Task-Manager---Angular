@@ -6,11 +6,7 @@ const taskRoutes = require("./app//routes/taskRoutes");
 const app = express();
 
 // Middlewares
-app.use(cors({
-  origin: 'http://localhost:4200', // Your Angular app
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type']
-}));
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(express.json());

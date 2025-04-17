@@ -12,6 +12,7 @@ import { ApiService } from 'src/app/services/api.service';
 export class AddTasksComponent implements OnInit {
   taskForm!: FormGroup;
   private editSub!: Subscription;
+  // taskStatusValue: string = 'Not Started';
 
   constructor(
     private dataService: DataService,
@@ -36,8 +37,19 @@ export class AddTasksComponent implements OnInit {
         this.taskForm.reset();
       }
     });
+    this.LoadTask();
   }
 
+  LoadTask() {
+    this.apiService.getTaskFromApi().subscribe({
+      next: () => {
+        console.log('Page is refreshed');
+      },
+      error: (error) => {
+        console.log('Page is not refreshed');
+      },
+    });
+  }
   prefillForm(taskData: any) {
     this.taskForm.patchValue({
       taskTitle: taskData.taskTitle,
@@ -51,7 +63,6 @@ export class AddTasksComponent implements OnInit {
   private formatDateForInput(dateString: string | Date): string {
     // Convert date to YYYY-MM-DD format for HTML date input
     const date = new Date(dateString);
-    console.log(date);
     return date.toISOString().split('T')[0];
   }
 
@@ -77,16 +88,19 @@ export class AddTasksComponent implements OnInit {
   onSubmit() {
     if (this.taskForm.valid) {
       const taskData = this.taskForm.value;
-
       if (this.dataService.getEditState()) {
         const editData = this.dataService.getEditTask();
         this.dataService.updateTask(editData.index, taskData);
       } else {
-        let index = this.dataService.displayTasks().length + 1;
-        console.log(index);
-        console.log(taskData);
-        
-        this.apiService.createTask(taskData, index);
+        let id = this.apiService.displayTasks().length + 1;
+        this.apiService.createTask(taskData, id).subscribe({
+          next: () => {
+            this.dataService.triggerTaskRefresh();
+          },
+          error: (error) => {
+            console.error('Error in creating task: ', error);
+          },
+        });
       }
 
       this.taskForm.reset();

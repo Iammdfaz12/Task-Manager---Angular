@@ -12,16 +12,42 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  getTaskFromApi() {
-    return this.http.get(`${this.apiUrl}`);
+  // Returns all the tasks in taskList array
+  displayTasks() {
+    return [...this.taskLists];
   }
 
+  // Getting all the task from the backend (GET Method)
+  getTaskFromApi(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}`);
+  }
+
+  // Creating task (POST Method)
   createTask(task: any, id: number): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
+    return this.http.post<any[]>(
+      this.apiUrl,
+      JSON.stringify({ ...task, id: id }),
+      {
+        headers,
+      }
+    );
+  }
 
-    console.log(task, id);
-    return this.http.post(this.apiUrl, JSON.stringify({ ...task, id: id }), {headers}); 
+  //Update the existing task (PUT Method)
+
+  updateTask(updatedTask: any, index: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${index}`, {
+      updatedTask,
+      id: index,
+    });
+  }
+
+  // Delete the task (DELETE Method)
+
+  deleteTask(id: number): Observable<any> {
+    return this.http.delete<any[]>(`${this.apiUrl}/${id}`);
   }
 }

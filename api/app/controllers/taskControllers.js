@@ -1,4 +1,5 @@
 const { json } = require("body-parser");
+const { log } = require("console");
 const fs = require("fs");
 const path = require("path");
 
@@ -22,7 +23,6 @@ exports.getTask = (req, res) => {
 // Creating new tasks
 exports.createTask = (req, res) => {
   const tasks = readData();
-  console.log(req.body);
   const newTask = {
     ...req.body,
     id: req.body.id,
@@ -36,13 +36,18 @@ exports.createTask = (req, res) => {
 // Updating tasks
 exports.updateTask = (req, res) => {
   const tasks = readData();
-  const taskIndex = tasks.findIndex((task) => task.id == req.params.id);
+  console.log("Request index value: ", req.params.id);
 
-  if (taskIndex === -1) {
+  const taskIndex = parseInt(req.params.id);
+
+  console.log("Founded index value in db: ", taskIndex);
+  console.log("Task data came from web: ", req.body.updateTask);
+
+  if (isNaN(taskIndex) || taskIndex < 0 || taskIndex >= tasks.length) {
     return res.status(404).json({ message: "Task not found" });
   }
 
-  const updatedTask = { ...tasks[taskIndex], ...req.body };
+  const updatedTask = { ...tasks[taskIndex], ...req.body.updateTask };
   tasks[taskIndex] = updatedTask;
 
   writeData(tasks);
@@ -52,12 +57,14 @@ exports.updateTask = (req, res) => {
 // Delete tasks
 exports.deleteTasks = (req, res) => {
   const tasks = readData();
-  const filteredTasks = tasks.filter((task) => task.id != req.params.id);
+  const index = parseInt(req.params.id); // Treat ID as index
 
-  if (tasks.length === filteredTasks.length) {
-    return res.status(404).json({ message: "Task Not found" });
+  if (isNaN(index) || index < 0 || index >= tasks.length) {
+    return res.status(404).json({ message: "Invalid task index" });
   }
 
-  writeData(filteredTasks);
-  res.status(200).json({ message: "Task deleted" });
+  tasks.splice(index, 1); // Remove task at index
+  writeData(tasks); // Save the updated list
+
+  return res.status(200).json({ message: "Task deleted successfully" });
 };

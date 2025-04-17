@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
 
@@ -18,14 +18,16 @@ export class TaskListsComponent implements OnInit {
 
   ngOnInit() {
     this.showTask();
+    this.dataService.taskRefresh$.subscribe(() => {
+      this.showTask();
+    });
   }
-
   showTask() {
     this.apiService.getTaskFromApi().subscribe({
       next: (tasks: any[]) => {
         // Add API tasks to the existing list
-        this.dataService.taskLists.push(...tasks);
-        this.taskList = [...this.taskList, ...tasks];
+        this.apiService.taskLists = [...tasks];
+        this.taskList = [...tasks];
       },
       error: (err) => {
         console.error('Error fetching tasks:', err);
@@ -39,7 +41,14 @@ export class TaskListsComponent implements OnInit {
   }
 
   deleteTask(index: number) {
-    this.dataService.deleteTask(index);
+    this.apiService.deleteTask(index).subscribe({
+      next: () => {
+        this.showTask();
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
   }
 
   // Open AddTaskComponent in Edit Mode

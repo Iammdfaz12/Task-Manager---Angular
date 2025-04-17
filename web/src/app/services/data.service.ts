@@ -1,6 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,18 +7,22 @@ import { ApiService } from './api.service';
 export class DataService {
   addTaskModal: boolean = false;
   editMode: boolean = false;
-  taskLists: any = [
-    
-  ];
+  taskLists: any = [];
   selectedTask: any = null;
   selectedTaskIndex: number | null = null;
   filterValue: string = 'all';
-  private taskUpdated = new Subject<void>();
 
+  private taskUpdated = new Subject<void>();
   taskUpdated$ = this.taskUpdated.asObservable();
+
+  private taskRefreshNeeded = new Subject<void>();
+  taskRefresh$ = this.taskRefreshNeeded.asObservable();
 
   constructor() {}
 
+  triggerTaskRefresh() {
+    this.taskRefreshNeeded.next();
+  }
 
   toggleModal() {
     this.addTaskModal = !this.addTaskModal;
@@ -81,6 +84,7 @@ export class DataService {
       this.taskLists[index] = updatedTask;
       this.taskUpdated.next();
     }
+    
     this.resetEditState();
   }
 
