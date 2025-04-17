@@ -1,0 +1,50 @@
+<div class="task-lists-main-container">
+  <div class="task-lists-container">
+    <div class="task-lists-header">
+      <h3>Your Tasks:</h3>
+      <div class="filter-section">
+        <label>Filter: </label>
+        <select name="filterTask" id="filterTask" [(ngModel)]="filterValue">
+          <option value="all">All</option>
+          <option value="Not Started">Not Started</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+    </div>
+    <div class="task-lists-body">
+      <div
+        class="task-card"
+        *ngFor="let task of taskList | taskFilter : filterValue; let i = index"
+      >
+        <div class="task-title">
+          <p>{{ task.taskTitle | uppercase }}</p>
+          <div class="task-card-buttons">
+            <button type="submit" (click)="onEditTask(i)">
+              <i class="fa-solid fa-pen-to-square" style="color: #ffffff"></i>
+            </button>
+            <button type="submit" (click)="deleteTask(i)">
+              <i class="fa-solid fa-trash" style="color: #d00b0b"></i>
+            </button>
+          </div>
+        </div>
+        <div class="task-desc">
+          <p>{{ task.taskDesc }}</p>
+        </div>
+
+        <div class="task-duration">
+          <p class="start-date">
+            <span>Start Date: </span>{{ task.taskStartDate | date }}
+          </p>
+          <p class="end-date">
+            <span>End Date: </span>{{ task.taskEndDate | date }}
+          </p>
+        </div>
+
+        <div class="task-status">
+          <p>Status: {{ task.taskStatus }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

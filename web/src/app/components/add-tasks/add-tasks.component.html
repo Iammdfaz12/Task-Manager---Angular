@@ -1,0 +1,81 @@
+<div class="add-task-main-container" *ngIf="isModalOpen()">
+  <div class="add-task-container">
+    <div class="add-task-head">
+      <h5 class="add-task-title">
+        {{ getEditMode() ? "Edit Task" : "Add New Task" }}
+      </h5>
+      <button type="submit" (click)="toggleModal()" class="close-button">
+        <i class="fa-solid fa-x fa-md" style="color: #ffffff"></i>
+      </button>
+    </div>
+
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="task-inputs">
+      <div class="task-input-design task-title-input">
+        <input
+          type="text"
+          name="task-title"
+          id="task-title"
+          placeholder="Enter Task Title"
+          formControlName="taskTitle"
+        />
+      </div>
+
+      <div class="task-input-design task-desc-input">
+        <textarea
+          name="task-desc"
+          id="task-desc"
+          placeholder="Enter Task Description"
+          formControlName="taskDesc"
+        ></textarea>
+      </div>
+
+      <div class="date-picker">
+        <div class="date start-date">
+          <label for="start-date">Start Date:</label>
+          <input
+            type="date"
+            name="start-date"
+            id="start-date"
+            formControlName="taskStartDate"
+          />
+        </div>
+        <div class="date end-date">
+          <label for="end-date">End Date:</label>
+          <input
+            type="date"
+            name="end-date"
+            id="end-date"
+            formControlName="taskEndDate"
+          />
+        </div>
+      </div>
+
+      <div class="task-status">
+        <label for="taskStatus">Task Status:</label>
+        <select
+          name="taskStatus"
+          id="taskStatus"
+          value="Not Started"
+          formControlName="taskStatus"
+        >
+          <option value="Not Started">Not Started</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+
+      <div class="add-task-buttons">
+        <button type="submit" (click)="toggleModal()" class="cancel-button">
+          Cancel
+        </button>
+        <button
+          type="submit"
+          [disabled]="taskForm.invalid"
+          class="add-task-button"
+        >
+          {{ getEditMode() ? "Edit Task" : "Add Task" }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+.navbar {
+  background: #373840;
+  padding: 10px 20px;
+}
+
+.logo a {
+  color: white;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.add-task-button button {
+  background: #68C18D;
+  color: white;
+  border: 1px black solid;
+  padding: 7px 15px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
