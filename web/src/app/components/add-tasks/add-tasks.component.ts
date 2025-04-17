@@ -90,7 +90,19 @@ export class AddTasksComponent implements OnInit {
       const taskData = this.taskForm.value;
       if (this.dataService.getEditState()) {
         const editData = this.dataService.getEditTask();
-        this.dataService.updateTask(editData.index, taskData);
+        taskData.id = editData.task.id;
+        // this.dataService.updateTask(editData.index, taskData);
+
+        this.apiService.updateTask(taskData).subscribe({
+          next: (response) => {
+            console.log('Task Updated: ', response);
+            this.dataService.setEditMode(false);
+            this.dataService.triggerTaskRefresh();
+          },
+          error: (error) => {
+            console.error('Update Failed: ', error);
+          },
+        });
       } else {
         let id = this.apiService.displayTasks().length + 1;
         this.apiService.createTask(taskData, id).subscribe({

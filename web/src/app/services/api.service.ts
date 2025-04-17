@@ -38,11 +38,8 @@ export class ApiService {
 
   //Update the existing task (PUT Method)
 
-  updateTask(updatedTask: any, index: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${index}`, {
-      updatedTask,
-      id: index,
-    });
+  updateTask(updatedTask: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${updatedTask.id}`, updatedTask);
   }
 
   // Delete the task (DELETE Method)

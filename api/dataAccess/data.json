@@ -4,15 +4,15 @@
     "taskDesc": "task 1",
     "taskStartDate": "2025-04-17",
     "taskEndDate": "2025-04-17",
-    "taskStatus": "Not Started",
-    "id": 2
+    "taskStatus": "In Progress",
+    "id": 1
   },
   {
     "taskTitle": "Task 2",
     "taskDesc": "task 2",
     "taskStartDate": "2025-04-17",
     "taskEndDate": "2025-04-17",
-    "taskStatus": "In Progress",
+    "taskStatus": "Completed",
     "id": 2
   }
 ]

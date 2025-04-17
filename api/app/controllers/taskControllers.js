@@ -36,18 +36,18 @@ exports.createTask = (req, res) => {
 // Updating tasks
 exports.updateTask = (req, res) => {
   const tasks = readData();
-  console.log("Request index value: ", req.params.id);
+  const taskId = parseInt(req.params.id);
 
-  const taskIndex = parseInt(req.params.id);
+  const taskIndex = tasks.findIndex(task => task.id === taskId);
 
   console.log("Founded index value in db: ", taskIndex);
-  console.log("Task data came from web: ", req.body.updateTask);
+  console.log("Task data came from web: ", req.body);
 
-  if (isNaN(taskIndex) || taskIndex < 0 || taskIndex >= tasks.length) {
+  if (taskIndex === -1) {
     return res.status(404).json({ message: "Task not found" });
   }
 
-  const updatedTask = { ...tasks[taskIndex], ...req.body.updateTask };
+  const updatedTask = { ...tasks[taskIndex], ...req.body };
   tasks[taskIndex] = updatedTask;
 
   writeData(tasks);
